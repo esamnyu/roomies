@@ -35,7 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
         _emailController.text,
         _passwordController.text,
       );
-      context.read<UserProvider>().setUser(user);
+      context.read<UserProvider>().setUser(user['username'] ?? '');
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       setState(() {
@@ -59,7 +59,7 @@ class _AuthScreenState extends State<AuthScreen> {
         _emailController.text,
         _passwordController.text,
       );
-      context.read<UserProvider>().setUser(user);
+      context.read<UserProvider>().setUser(user['username'] ?? '');
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       setState(() {
@@ -153,7 +153,7 @@ class _AuthScreenState extends State<AuthScreen> {
       children: [
         Text(
           'Login',
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         SizedBox(height: 20),
         TextField(
@@ -201,7 +201,7 @@ class _AuthScreenState extends State<AuthScreen> {
       children: [
         Text(
           'Sign Up',
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         SizedBox(height: 20),
         TextField(
@@ -253,7 +253,7 @@ class _AuthScreenState extends State<AuthScreen> {
       children: [
         Text(
           'Forgot Password',
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         SizedBox(height: 20),
         TextField(

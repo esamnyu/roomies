@@ -5,6 +5,7 @@ import 'auth/user_provider.dart';
 import 'boundary_edit_screen.dart';
 import 'task_detail_screen.dart';
 import 'task_edit_screen.dart';
+import 'notification_screen.dart';
 
 class HomeDashboard extends StatefulWidget {
   @override
@@ -65,7 +66,6 @@ class _HomeDashboardState extends State<HomeDashboard> {
         ];
       });
     } catch (e) {
-      // TODO: Handle error (show error message)
       print('Error fetching dashboard data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load dashboard data. Please try again.')),
@@ -102,6 +102,15 @@ class _HomeDashboardState extends State<HomeDashboard> {
     ).then((_) => _fetchDashboardData());
   }
 
+  void _navigateToNotifications() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NotificationScreen(),
+      ),
+    ).then((_) => _fetchDashboardData());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,9 +119,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
         actions: [
           IconButton(
             icon: Icon(Icons.notifications),
-            onPressed: () {
-              // TODO: Navigate to notifications screen
-            },
+            onPressed: _navigateToNotifications,
           ),
         ],
       ),
@@ -155,7 +162,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Today\'s Schedule', style: Theme.of(context).textTheme.headline6),
+        Text('Today\'s Schedule', style: Theme.of(context).textTheme.titleLarge),
         SizedBox(height: 10),
         ...todaySchedule.map((task) => ListTile(
           leading: Icon(Icons.access_time),
@@ -171,15 +178,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Recent Notifications', style: Theme.of(context).textTheme.headline6),
+        Text('Recent Notifications', style: Theme.of(context).textTheme.titleLarge),
         SizedBox(height: 10),
         ...recentNotifications.map((notification) => ListTile(
           leading: Icon(Icons.notifications),
           title: Text(notification['title']),
           subtitle: Text(notification['time']),
-          onTap: () {
-            // TODO: Navigate to notification detail or relevant screen
-          },
+          onTap: () => _navigateToNotifications(),
         )).toList(),
       ],
     );
@@ -189,7 +194,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Boundaries Summary', style: Theme.of(context).textTheme.headline6),
+        Text('Boundaries Summary', style: Theme.of(context).textTheme.titleLarge),
         SizedBox(height: 10),
         ...boundaries.map((boundary) => ListTile(
           leading: Icon(Icons.security),

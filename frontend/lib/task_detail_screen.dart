@@ -1,9 +1,38 @@
 import 'package:flutter/material.dart';
+import 'task_edit_screen.dart';
 
-class TaskDetailScreen extends StatelessWidget {
+class TaskDetailScreen extends StatefulWidget {
   final Map<String, dynamic> task;
 
   TaskDetailScreen({required this.task});
+
+  @override
+  _TaskDetailScreenState createState() => _TaskDetailScreenState();
+}
+
+class _TaskDetailScreenState extends State<TaskDetailScreen> {
+  late Map<String, dynamic> _task;
+
+  @override
+  void initState() {
+    super.initState();
+    _task = Map.from(widget.task);
+  }
+
+  void _navigateToEditScreen() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TaskEditScreen(task: _task),
+      ),
+    );
+
+    if (result != null && result is Map<String, dynamic>) {
+      setState(() {
+        _task = result;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +42,7 @@ class TaskDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {
-              // TODO: Navigate to TaskEditScreen
-            },
+            onPressed: _navigateToEditScreen,
           ),
         ],
       ),
@@ -25,32 +52,35 @@ class TaskDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              task['title'],
-              style: Theme.of(context).textTheme.headline5,
+              _task['title'],
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 16),
             Text(
-              'Scheduled for: ${task['time']}',
-              style: Theme.of(context).textTheme.subtitle1,
+              'Scheduled for: ${_task['time']}',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             SizedBox(height: 16),
             Text(
               'Description:',
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
-              task['description'] ?? 'No description provided.',
-              style: Theme.of(context).textTheme.bodyText2,
+              _task['description'] ?? 'No description provided.',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(height: 16),
             Text(
-              'Assigned to: ${task['assignedTo'] ?? 'Unassigned'}',
-              style: Theme.of(context).textTheme.subtitle1,
+              'Assigned to: ${_task['assignedTo'] ?? 'Unassigned'}',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
                 // TODO: Implement task completion logic
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Task marked as complete')),
+                );
               },
               child: Text('Mark as Complete'),
               style: ElevatedButton.styleFrom(

@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'auth/user_provider.dart';
-import 'auth/auth_screen.dart';
-import 'auth/auth_service.dart';
 import 'home_dashboard.dart';
-import 'onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +16,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final AuthService _authService = AuthService();
   final SharedPreferences prefs;
-
+  
   MyApp({required this.prefs});
 
   @override
@@ -32,25 +28,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: FutureBuilder<bool>(
-        future: _authService.isLoggedIn(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(body: Center(child: CircularProgressIndicator()));
-          } else {
-            if (snapshot.data == true) {
-              bool onboardingComplete = prefs.getBool('onboardingComplete') ?? false;
-              if (onboardingComplete) {
-                return HomeDashboard();
-              } else {
-                return OnboardingScreen();
-              }
-            } else {
-              return AuthScreen();
-            }
-          }
-        },
-      ),
+      // Directly return HomeDashboard to bypass auth and onboarding
+      home: HomeDashboard(),
     );
   }
 }

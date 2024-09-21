@@ -1,21 +1,64 @@
 import 'package:flutter/material.dart';
 
-class TaskDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> task;
+class TaskEditScreen extends StatefulWidget {
+  final Map<String, dynamic>? task;
 
-  TaskDetailScreen({required this.task});
+  TaskEditScreen({this.task});
+
+  @override
+  _TaskEditScreenState createState() => _TaskEditScreenState();
+}
+
+class _TaskEditScreenState extends State<TaskEditScreen> {
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _timeController;
+  late TextEditingController _assignedToController;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.task?['title'] ?? '');
+    _descriptionController = TextEditingController(text: widget.task?['description'] ?? '');
+    _timeController = TextEditingController(text: widget.task?['time'] ?? '');
+    _assignedToController = TextEditingController(text: widget.task?['assignedTo'] ?? '');
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _timeController.dispose();
+    _assignedToController.dispose();
+    super.dispose();
+  }
+
+  void _saveTask() {
+    // TODO: Implement task saving logic
+    Map<String, dynamic> updatedTask = {
+      'title': _titleController.text,
+      'description': _descriptionController.text,
+      'time': _timeController.text,
+      'assignedTo': _assignedToController.text,
+    };
+    
+    // Here you would typically send this data to your backend or state management solution
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Task saved')),
+    );
+    Navigator.pop(context, updatedTask);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task Details'),
+        title: Text(widget.task == null ? 'Add Task' : 'Edit Task'),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              // TODO: Navigate to TaskEditScreen
-            },
+            icon: Icon(Icons.save),
+            onPressed: _saveTask,
           ),
         ],
       ),
@@ -24,38 +67,25 @@ class TaskDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              task['title'],
-              style: Theme.of(context).textTheme.headline5,
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(labelText: 'Title'),
             ),
             SizedBox(height: 16),
-            Text(
-              'Scheduled for: ${task['time']}',
-              style: Theme.of(context).textTheme.subtitle1,
+            TextField(
+              controller: _timeController,
+              decoration: InputDecoration(labelText: 'Scheduled Time'),
             ),
             SizedBox(height: 16),
-            Text(
-              'Description:',
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              task['description'] ?? 'No description provided.',
-              style: Theme.of(context).textTheme.bodyText2,
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(labelText: 'Description'),
+              maxLines: 3,
             ),
             SizedBox(height: 16),
-            Text(
-              'Assigned to: ${task['assignedTo'] ?? 'Unassigned'}',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                // TODO: Implement task completion logic
-              },
-              child: Text('Mark as Complete'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
-              ),
+            TextField(
+              controller: _assignedToController,
+              decoration: InputDecoration(labelText: 'Assigned To'),
             ),
           ],
         ),
