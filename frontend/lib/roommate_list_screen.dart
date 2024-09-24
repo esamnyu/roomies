@@ -6,10 +6,10 @@ class RoommateListScreen extends StatefulWidget {
 }
 
 class _RoommateListScreenState extends State<RoommateListScreen> {
-  List<Map<String, dynamic>> roommates = [
-    {'id': '1', 'name': 'John Doe', 'email': 'john@example.com', 'phone': '123-456-7890'},
-    {'id': '2', 'name': 'Jane Smith', 'email': 'jane@example.com', 'phone': '098-765-4321'},
-    // Add more mock data as needed
+  List<Map<String, String>> roommates = [
+    {'name': 'John Doe', 'status': 'Active'},
+    {'name': 'Jane Smith', 'status': 'Away'},
+    {'name': 'Mike Johnson', 'status': 'Busy'},
   ];
 
   @override
@@ -17,36 +17,34 @@ class _RoommateListScreenState extends State<RoommateListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Roommates'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              // TODO: Navigate to add new roommate screen
-            },
-          ),
-        ],
       ),
       body: ListView.builder(
         itemCount: roommates.length,
         itemBuilder: (context, index) {
-          final roommate = roommates[index];
           return ListTile(
             leading: CircleAvatar(
-              child: Text(roommate['name'][0]),
+              child: Text(roommates[index]['name']![0]),
             ),
-            title: Text(roommate['name']),
-            subtitle: Text(roommate['email']),
-            trailing: Icon(Icons.chevron_right),
+            title: Text(roommates[index]['name']!),
+            subtitle: Text(roommates[index]['status']!),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RoommateDetailScreen(roommate: roommate),
-                ),
+              // TODO: Navigate to roommate detail screen
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Tapped on ${roommates[index]['name']}')),
               );
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // TODO: Implement add new roommate functionality
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Add new roommate functionality not implemented yet')),
+          );
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Add New Roommate',
       ),
     );
   }
