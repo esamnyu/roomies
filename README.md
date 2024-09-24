@@ -11,7 +11,7 @@ The Roomies app simplifies shared living by offering tools for roommates to effe
 - **Boundaries Setting**: Establish and manage house rules and personal boundaries.
 - **Roommate Profiles**: View and manage information about your roommates.
 - **Notifications**: Stay updated with important announcements and reminders.
-- **Personal Space**: Manage individual preferences and settings.
+- **Personal Space**: Manage individual preferences and settings. (personal space should be sub-bucket for boundary setting)
 
 ## Technology Stack
 
