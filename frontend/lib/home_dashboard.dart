@@ -6,8 +6,10 @@ import 'boundary_edit_screen.dart';
 import 'task_detail_screen.dart';
 import 'task_edit_screen.dart';
 import 'notification_screen.dart';
-import 'personal_space_bucket.dart';
 import 'roommate_list_screen.dart'; // Add this import
+import 'boundary_setting_screen.dart';
+import 'task_list_screen.dart';
+
 class HomeDashboard extends StatefulWidget {
   @override
   _HomeDashboardState createState() => _HomeDashboardState();
@@ -34,6 +36,28 @@ class _HomeDashboardState extends State<HomeDashboard> {
       'transports': ['websocket'],
     });
   }
+
+  void _navigateToBoundarySetting() {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => BoundarySettingScreen()),
+  ).then((_) => _fetchDashboardData());
+}
+  void _navigateToTasks() {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => TaskListScreen()),
+  ).then((_) => _fetchDashboardData());
+}
+  void _navigateToSettings() {
+  // TODO: Implement SettingsScreen and uncomment the following lines
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(builder: (context) => SettingsScreen()),
+  // ).then((_) => _fetchDashboardData());
+  print("Settings screen not implemented yet");
+}
+
 
   Future<void> _fetchDashboardData() async {
     // TODO: Implement actual data fetching
@@ -70,23 +94,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
     ).then((_) => _fetchDashboardData());
   }
 
-  void _navigateToPersonalSpace() {
+
+  void _navigateToRoommates() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PersonalSpaceBucket()),
+      MaterialPageRoute(builder: (context) => RoommateListScreen()),
     ).then((_) => _fetchDashboardData());
   }
-
-void _navigateToRoommates() {
-  print("Navigating to Roommates Screen"); // Add this debug print
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => RoommateListScreen()),
-  ).then((_) {
-    print("Returned from Roommates Screen"); // Add this debug print
-    _fetchDashboardData();
-  });
-}
 
   Widget _buildTodaySchedule() {
     return Column(
@@ -142,77 +156,75 @@ void _navigateToRoommates() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome, ${context.watch<UserProvider>().username}'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: _navigateToNotifications,
-          ),
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: _navigateToPersonalSpace,
-          ),
-        ],
-      ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: _fetchDashboardData,
-              child: ListView(
-                padding: EdgeInsets.all(16),
-                children: [
-                  _buildTodaySchedule(),
-                  SizedBox(height: 20),
-                  _buildRecentNotifications(),
-                  SizedBox(height: 20),
-                  _buildBoundariesSummary(),
-                ],
-              ),
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToTaskEdit(null),
-        child: Icon(Icons.add),
-        tooltip: 'Add new task',
-      ),
-      bottomNavigationBar: BottomNavigationBar(
+    appBar: AppBar(
+      title: Text('Welcome, ${context.watch<UserProvider>().username}'),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.notifications),
+          onPressed: _navigateToNotifications,
+        ),
+      ],  
+    ),
+    body: _buildBody(),
+    floatingActionButton: FloatingActionButton(
+      onPressed: () => _navigateToTaskEdit(null),
+      child: Icon(Icons.add),
+      tooltip: 'Add new task',
+    ),
+    bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
           BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Roommates'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Personal Space'),
+          BottomNavigationBarItem(icon: Icon(Icons.security), label: 'Boundary Setting'),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
-  print("Tapped on index: $index"); // Add this debug print
-  setState(() {
-    _currentIndex = index;
-  });
-  switch (index) {
-    case 0: // Home
-      print("Home tab tapped");
-      break;
-    case 1: // Tasks
-      print("Tasks tab tapped");
-      // TODO: Implement navigation to Tasks screen
-      break;
-    case 2: // Roommates
-      print("Roommates tab tapped");
-      _navigateToRoommates();
-      break;
-    case 3: // Settings
-      print("Settings tab tapped");
-      // TODO: Implement navigation to Settings screen
-      break;
-    case 4: // Personal Space
-      print("Personal Space tab tapped");
-      _navigateToPersonalSpace();
-      break;
+          setState(() {
+            _currentIndex = index;
+          });
+          switch (index) {
+            case 0: // Home
+              // Stay on home screen
+              break;
+            case 1: // Tasks
+              _navigateToTasks();
+              break;
+            case 2: // Roommates
+              _navigateToRoommates();
+              break;
+            case 3: // Settings
+              _navigateToSettings();
+              break;
+            case 4: // Boundary Setting
+              _navigateToBoundarySetting();
+              break;
         }
       },
       ),
     );
   }
+
+  Widget _buildBody() {
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return RefreshIndicator(
+      onRefresh: _fetchDashboardData,
+      child: ListView(
+        padding: EdgeInsets.all(16),
+        children: [
+          _buildTodaySchedule(),
+          SizedBox(height: 20),
+          _buildRecentNotifications(),
+          SizedBox(height: 20),
+          _buildBoundariesSummary(),
+        ],
+      ),
+    );
+  }
+
 }
+

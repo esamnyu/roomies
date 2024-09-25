@@ -4,7 +4,6 @@ import 'auth/user_provider.dart';
 
 class BoundaryEditScreen extends StatefulWidget {
   final Map<String, dynamic>? boundary;
-
   BoundaryEditScreen({this.boundary});
 
   @override
@@ -13,23 +12,26 @@ class BoundaryEditScreen extends StatefulWidget {
 
 class _BoundaryEditScreenState extends State<BoundaryEditScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
+  late TextEditingController _titleController;
   late TextEditingController _descriptionController;
-  String _importance = 'Medium';
+  late TextEditingController _consequencesController;
+  String _importance = 'High';
   List<String> _importanceLevels = ['Low', 'Medium', 'High'];
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.boundary?['name'] ?? '');
+    _titleController = TextEditingController(text: widget.boundary?['title'] ?? '');
     _descriptionController = TextEditingController(text: widget.boundary?['description'] ?? '');
-    _importance = widget.boundary?['importance'] ?? 'Medium';
+    _consequencesController = TextEditingController(text: widget.boundary?['consequences'] ?? '');
+    _importance = widget.boundary?['importance'] ?? 'High';
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _titleController.dispose();
     _descriptionController.dispose();
+    _consequencesController.dispose();
     super.dispose();
   }
 
@@ -37,9 +39,10 @@ class _BoundaryEditScreenState extends State<BoundaryEditScreen> {
     if (_formKey.currentState!.validate()) {
       // TODO: Implement saving logic (API call, state update, etc.)
       Map<String, dynamic> boundaryData = {
-        'name': _nameController.text,
+        'title': _titleController.text,
         'description': _descriptionController.text,
         'importance': _importance,
+        'consequences': _consequencesController.text,
       };
       print('Saving boundary: $boundaryData');
       Navigator.pop(context);
@@ -50,77 +53,67 @@ class _BoundaryEditScreenState extends State<BoundaryEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.boundary == null ? 'Add Boundary' : 'Edit Boundary'),
+        title: Text('Sub-bucket Detail'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: _saveBoundary,
+          TextButton(
+            child: Text('Edit', style: TextStyle(color: Colors.blue)),
+            onPressed: () {
+              // TODO: Implement edit mode
+            },
           ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
+      body: SingleChildScrollView(
+        child: Padding(
           padding: EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Boundary Name',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a boundary name';
-                }
-                return null;
-              },
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Title', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(_titleController.text),
+                        SizedBox(height: 16),
+                        Text('Description', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(_descriptionController.text),
+                        SizedBox(height: 16),
+                        Text('Importance', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(_importance, style: TextStyle(color: Colors.blue)),
+                        SizedBox(height: 16),
+                        Text('Consequences', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(_consequencesController.text),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Card(
+                  color: Colors.yellow[100],
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(Icons.info_outline, color: Colors.orange),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Remember, consistent application of this rule helps maintain a respectful living environment for all roommates.',
+                            style: TextStyle(color: Colors.orange[800]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a description';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _importance,
-              decoration: InputDecoration(
-                labelText: 'Importance',
-                border: OutlineInputBorder(),
-              ),
-              items: _importanceLevels.map((String level) {
-                return DropdownMenuItem<String>(
-                  value: level,
-                  child: Text(level),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    _importance = newValue;
-                  });
-                }
-              },
-            ),
-            SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _saveBoundary,
-              child: Text('Save Boundary'),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
