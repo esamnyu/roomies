@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class TaskEditScreen extends StatefulWidget {
   final Map<String, dynamic>? task;
-
   TaskEditScreen({this.task});
 
   @override
@@ -41,9 +40,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
       'time': _timeController.text,
       'assignedTo': _assignedToController.text,
     };
-    
     // Here you would typically send this data to your backend or state management solution
-    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Task saved')),
     );

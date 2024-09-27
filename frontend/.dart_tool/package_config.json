@@ -369,7 +369,7 @@
     },
     {
       "name": "web",
-      "rootUri": "file:///Users/ethansam/.pub-cache/hosted/pub.dev/web-1.0.0",
+      "rootUri": "file:///Users/ethansam/.pub-cache/hosted/pub.dev/web-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -392,7 +392,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-09-26T17:14:25.681657Z",
+  "generated": "2024-09-27T04:11:46.725643Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///Users/ethansam/Documents/GitHub/roomies/flutter",

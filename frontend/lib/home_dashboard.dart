@@ -154,22 +154,19 @@ class _HomeDashboardState extends State<HomeDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome, ${context.watch<UserProvider>().username}'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: _navigateToNotifications,
+    return Stack(
+      children: [
+        _buildBody(),
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: FloatingActionButton(
+            onPressed: () => _navigateToTaskEdit(null),
+            child: Icon(Icons.add),
+            tooltip: 'Add new task',
           ),
-        ],  
-      ),
-      body: _buildBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToTaskEdit(null),
-        child: Icon(Icons.add),
-        tooltip: 'Add new task',
-      ),
+        ),
+      ],
     );
   }
 
@@ -182,6 +179,20 @@ class _HomeDashboardState extends State<HomeDashboard> {
       child: ListView(
         padding: EdgeInsets.all(16),
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Welcome, ${context.watch<UserProvider>().username}',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: _navigateToNotifications,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
           _buildTodaySchedule(),
           SizedBox(height: 20),
           _buildRecentNotifications(),

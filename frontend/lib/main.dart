@@ -6,7 +6,7 @@ import 'home_dashboard.dart';
 import 'boundary_setting_screen.dart';
 import 'task_list_screen.dart';
 import 'roommate_list_screen.dart';
-// Import other screens as needed
+import 'settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,27 +45,58 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     HomeDashboard(),
-    TaskListScreen(), // Replace Text widget with actual TaskListScreen
-    RoommateListScreen(), // Replace Text widget with actual RoommateListScreen
-    Text('Settings'), // Keep this as is for now
+    TaskListScreen(),
+    RoommateListScreen(),
+    SettingsScreen(),
     BoundarySettingScreen(),
   ];
 
   void _onItemTapped(int index) {
-    print('Tapped bottom navigation item: $index'); // Debug print
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  String _getTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Home';
+      case 1:
+        return 'Tasks';
+      case 2:
+        return 'Roommates';
+      case 3:
+        return 'Settings';
+      case 4:
+        return 'Boundary Setting';
+      default:
+        return 'Roomies';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('Building MainScreen, selectedIndex: $_selectedIndex'); // Debug print
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _widgetOptions,
+      appBar: AppBar(
+        title: Text(_getTitle(_selectedIndex)),
+        actions: _selectedIndex == 4
+            ? [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    // TODO: Implement edit functionality for BoundarySettingScreen
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.mail),
+                  onPressed: () {
+                    // TODO: Implement mail functionality for BoundarySettingScreen
+                  },
+                ),
+              ]
+            : null,
       ),
+      body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
